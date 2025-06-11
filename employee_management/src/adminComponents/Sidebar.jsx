@@ -13,11 +13,11 @@ function Sidebar() {
     const location = useLocation()
     const navigate = useNavigate()
     const tabs = [
-        {icon: <MdSpaceDashboard /> ,label: "Dashboard", link: "/admin-dashboard"},
-        {icon: <FaUsers /> ,label: "Manage Staff", link: "/manage-staff"},
-        {icon: <FaCalendarCheck /> ,label: "Attendance", link: "/attendance"},
-        {icon: <FaCalendarDay />,label: "Manage Events", link: "/manage-events"},
-        {icon: <FaClipboardList /> ,label: "Generate Reports", link: "/generate-reports"},
+        {icon: <MdSpaceDashboard size={20}/> ,label: "Dashboard", link: "/admin-dashboard"},
+        {icon: <FaUsers size={20}/> ,label: "Manage Staff", link: "/manage-staff"},
+        {icon: <FaCalendarCheck size={20}/> ,label: "Attendance Records", link: "/attendance"},
+        {icon: <FaCalendarDay size={20}/>,label: "Manage Events", link: "/manage-events"},
+        {icon: <FaClipboardList size={20}/> ,label: "Generate Reports", link: "/generate-reports"},
     ]
   return (
     <aside className='h-full w-75 p-2 bg-[#0A1727]'>
@@ -31,7 +31,7 @@ function Sidebar() {
                     <li
                     key={index}
                     onClick={() => navigate(tab.link)}
-                    className={clsx('text-white flex flex-row gap-2 items-center text-lg py-2 px-2 cursor-pointer hover:bg-gray-800', location.pathname === tab.link && "bg-gray-800")} 
+                    className={clsx('text-white flex flex-row gap-2 items-center text-md py-2 px-2 cursor-pointer hover:bg-gray-800', location.pathname === tab.link && "bg-gray-800")} 
                     >
                         {tab.icon} 
                         {tab.label}

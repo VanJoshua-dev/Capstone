@@ -7,7 +7,7 @@ function BreadCrumb(props) {
     <div className='flex flex-row gap-1 items-center '>
      <p
      onClick={() => navigate("/admin-dashboard")}
-     className='hover:underline hover:text-blue-500 cursor-pointer text-md'>{props.text1}</p>
+     className='hover:underline hover:text-blue-500 cursor-pointer text-md'>Dashboard</p>
      <p className='text-xl'>»</p>
      <p className='text-md'>{props.text2}</p>
     </div>

@@ -9,7 +9,7 @@ function Main() {
   return (
     <main className="w-full h-full p-2">
       <Header />
-      <BreadCrumb text1="Home" text2="Dashbboard" />
+      <BreadCrumb  text2="Dashbboard" />
       <div className="h-95">
         <Metrix />
         <div className="w-full h-full flex flex-row gap-2">

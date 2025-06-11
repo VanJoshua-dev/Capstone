@@ -8,7 +8,7 @@ function GenerateReports() {
       <Sidebar />
       <main className="w-full h-full p-2">
         <Header />
-        <BreadCrumb text1="Home" text2="Generate Reports" />
+        <BreadCrumb  text2="Generate Reports" />
         <div className="h-95">
           <h1>This is generate reports</h1>
         </div>
