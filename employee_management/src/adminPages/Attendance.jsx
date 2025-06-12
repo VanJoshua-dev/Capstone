@@ -168,7 +168,7 @@ function AttendancePage() {
                       {" "}
                       <span
                         className={clx(
-                          "py-1 px-4 rounded",
+                          "py-1 w-full inline-block px-4 rounded text-center",
                           att.status === "Present"
                             ? "bg-green-300"
                             : "bg-red-300"
@@ -180,7 +180,7 @@ function AttendancePage() {
                     <td className="px-4 py-2">
                       <span
                         className={clx(
-                          "py-1 px-4 rounded",
+                          "py-1 px-4 w-full inline-block text-center rounded",
                           att.remark === "On Time"
                             ? "bg-green-300"
                             : att.remark === "Late"

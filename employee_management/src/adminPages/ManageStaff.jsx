@@ -106,7 +106,7 @@ function ManageStaff() {
                       <button
                         // onClick={() => openModal("edit", order)}
                         title="Edit staff"
-                        className="w-full h-full p-2 flex items-center cursor-pointer justify-center bg-green-500 text-white rounded-sm hover:bg-green-600"
+                        className="w-full h-full p-1 flex items-center cursor-pointer justify-center bg-green-500 text-white rounded-sm hover:bg-green-600"
                       >
                         <FaRegEdit size={20} />
                       </button>
@@ -115,7 +115,7 @@ function ManageStaff() {
                       <button
                         // onClick={() => openModal("delete", order)}
                         title="Delete staff"
-                        className="w-full h-full p-2 flex items-center justify-center bg-red-500 text-white rounded-sm hover:bg-red-600"
+                        className="w-full h-full p-1 flex items-center justify-center bg-red-500 text-white rounded-sm hover:bg-red-600"
                       >
                         <MdDeleteOutline size={20} />
                       </button>

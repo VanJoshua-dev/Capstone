@@ -114,7 +114,7 @@ function ManageEvents() {
                     <td className="px-4 py-2">
                       <button
                         title="Edit event"
-                        className="w-full h-full p-2 flex items-center cursor-pointer justify-center bg-green-500 text-white rounded-sm hover:bg-green-600"
+                        className="w-full h-full p-1 flex items-center cursor-pointer justify-center bg-green-500 text-white rounded-sm hover:bg-green-600"
                       >
                         <FaRegEdit size={20} />
                       </button>
@@ -122,7 +122,7 @@ function ManageEvents() {
                     <td className="px-4 py-2">
                       <button
                         title="Delete event"
-                        className="w-full h-full p-2 flex items-center justify-center bg-red-500 text-white rounded-sm hover:bg-red-600"
+                        className="w-full h-full p-1 flex items-center justify-center bg-red-500 text-white rounded-sm hover:bg-red-600"
                       >
                         <MdDeleteOutline size={20} />
                       </button>

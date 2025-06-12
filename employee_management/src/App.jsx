@@ -7,7 +7,10 @@ import AdminDashboard from './adminPages/AdminDashboard';
 import ManageStaff from './adminPages/ManageStaff';
 import Attendance from './adminPages/Attendance';
 import ManageEvents from './adminPages/ManageEvents';
-import GenerateReports from './adminPages/GenerateReports';
+import Reports from './adminPages/GenerateReports';
+import LeaveRequests from './adminPages/LeaveRequests';
+import ActivityLogs from './adminPages/ActivityLogs';
+import StaffDashboard from './staffPages/StaffDashboard';
 function App() {
  
 
@@ -22,7 +25,12 @@ function App() {
           <Route path="/manage-staff" element={<ManageStaff />} />
           <Route path="/attendance" element={<Attendance />} />
           <Route path="/manage-events" element={<ManageEvents />} />
-          <Route path="/generate-reports" element={<GenerateReports />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/leave-requests" element={<LeaveRequests />} />
+          <Route path="/activity-logs" element={<ActivityLogs />} />
+
+          {/* staff-dashboard */}
+          <Route path="/staff-dashboard" element={<StaffDashboard />} />
         </Routes>
     </>
   )
