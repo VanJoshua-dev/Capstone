@@ -44,14 +44,15 @@ const StaffDashboard = () => {
     },
   ];
 
-  // Start QR scanner
+  // Start QR scanner ;>
   useEffect(() => {
     let html5QrCode;
 
     if (showScanner) {
       const qrRegionId = "qr-reader";
 
-      // Clear any old instance
+      // Reset instance
+      // PUTEK AYOKO NA!!!!
       Html5Qrcode.getCameras()
         .then(() => {
           html5QrCode = new Html5Qrcode(qrRegionId);
