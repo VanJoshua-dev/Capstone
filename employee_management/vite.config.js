@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     host: true, // to expose to network
     allowedHosts: [
-      'ebea-136-158-78-246.ngrok-free.app' // your current ngrok domain
+      'ed99-136-158-78-35.ngrok-free.app' // your current ngrok domain
     ]
   }
 })

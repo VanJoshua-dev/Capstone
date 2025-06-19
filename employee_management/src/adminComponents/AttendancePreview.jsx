@@ -25,7 +25,7 @@ function AttendancePreview() {
   });
 
   return (
-    <div className="w-full h-full bg-blue-50 flex flex-col overflow-hidden">
+    <div className="w-full h-full shadow   flex flex-col overflow-hidden">
       {/* Sticky Header with Filter */}
       <header className="sticky top-0 z-10 bg-white border-b border-gray-200 px-4 py-3">
         <h1 className="text-2xl font-semibold mb-3">Attendance</h1>
@@ -54,7 +54,7 @@ function AttendancePreview() {
         {filteredData.length === 0 ? (
           <p className="text-center text-gray-500">No records found.</p>
         ) : (
-          <div className="border border-gray-300 shadow overflow-hidden">
+          <div className="overflow-hidden">
             <table className="min-w-full table-fixed">
               <thead className="bg-gray-100 block w-full">
                 <tr className="w-full flex">
@@ -74,7 +74,7 @@ function AttendancePreview() {
               </thead>
 
               <tbody
-                className="block max-h-64 overflow-y-auto w-full"
+                className="block h-60 overflow-y-auto w-full"
                 style={{ maxHeight: "300px" }}
               >
                 {filteredData.map((record, index) => (

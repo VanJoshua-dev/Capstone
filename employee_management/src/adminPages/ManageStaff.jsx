@@ -18,7 +18,7 @@ function ManageStaff() {
   const [searchInput, setSearchInput] = useState(""); // Raw input
   const [search, setSearch] = useState(""); // Confirmed search term
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 8;
+  const recordsPerPage = 10;
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -73,7 +73,6 @@ function ManageStaff() {
             <thead className="bg-white ">
               <tr>
                 <th className="px-4 py-2 font-semibold">Staff ID</th>
-                <th className="px-4 py-2 font-semibold">Avatar</th>
                 <th className="px-4 py-2 font-semibold">Name</th>
                 <th className="px-4 py-2 font-semibold">Username</th>
                 <th className="px-4 py-2 font-semibold">Password</th>
@@ -89,14 +88,6 @@ function ManageStaff() {
                 paginatedData.map((staff, index) => (
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="px-4 py-2">{staff.staffID}</td>
-                    <td className="px-4 py-2">
-                      {/* <div className="w-10 h-10 bg-gray-300 rounded-full" /> */}
-                      <img
-                        className="w-10 h-10 rounded-full border-1 border-gray-600"
-                        src="https://scontent.fmnl17-3.fna.fbcdn.net/v/t39.30808-1/270149507_109076721648494_4282075989312972371_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=103&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeFmH5kBvP0PBFV67owYe7yFjwZd4hvNVLCPBl3iG81UsKFeeibudOpiRzzReFkF4-EA3o-ayhmgoaKlDp6zIhyD&_nc_ohc=vBHFUWTmzO8Q7kNvwFP-fjE&_nc_oc=AdmespsDy422oyT2J18MEHS3wwbutuOV2TY1FeTBrr8bD4orwHb5nbAE9KQn3u920ZY&_nc_zt=24&_nc_ht=scontent.fmnl17-3.fna&_nc_gid=OxebAImtmAlnXka6klyetw&oh=00_AfO5VTub_ypawTGHzrp_HlZ5pQtEK-9Z0BKbjDn3zlfJlw&oe=684DE0AA"
-                        alt="Meinard"
-                      />
-                    </td>
                     <td className="px-4 py-2">{staff.name}</td>
                     <td className="px-4 py-2">{staff.user}</td>
                     <td className="px-4 py-2">{staff.pass}</td>
