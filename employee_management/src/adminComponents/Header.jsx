@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import Clock from "./Clock";
 import { IoMdArrowDropdown } from "react-icons/io";
+import {useNavigate} from "react-router-dom"
 
 
-
-const ProfileDropdown = () => {
+const ProfileDropdown = ({ openModal }) => {//open is for the modal component
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef();
+  const navigate = useNavigate();
 
   // Close dropdown if clicked outside
   useEffect(() => {
@@ -18,6 +19,11 @@ const ProfileDropdown = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  //handle logout
+  const handleLogout = () => {
+    navigate("")
+  }
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -36,8 +42,16 @@ const ProfileDropdown = () => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg  z-10">
           <ul className="text-sm text-gray-700">
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">My Account</li>
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Logout</li>
+             <li
+              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              onClick={() => {
+                openModal(); // This triggers modal from parent
+                setIsOpen(false);
+              }}
+            >
+              My Account
+            </li>
+            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>Logout</li>
           </ul>
         </div>
       )}
@@ -45,7 +59,7 @@ const ProfileDropdown = () => {
   );
 };
 
-function Header() {
+function Header({ onOpenAccountModal }) {
   return (
     <header className="bg-white py-2 px-5 mb-2 flex flex-row justify-between items-center">
       <div>
@@ -53,7 +67,7 @@ function Header() {
           <Clock />
       </div>
 
-        <ProfileDropdown />
+        <ProfileDropdown openModal={onOpenAccountModal}/>
       
     </header>
   );

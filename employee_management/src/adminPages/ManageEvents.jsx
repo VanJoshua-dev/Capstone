@@ -5,6 +5,10 @@ import Sidebar from "../adminComponents/Sidebar";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import clx from "clsx";
+import AddEvent from "../adminModals/AddEvent";
+import EditEvent from "../adminModals/EditEvent";
+import DeleteEvent from "../adminModals/DeleteEvent";
+import AccountSettings from "../adminModals/AccountSettings";
 
 function ManageEvents() {
   const allEvents = [
@@ -38,11 +42,21 @@ function ManageEvents() {
     event.eventName.toLowerCase().includes(filter.toLowerCase())
   );
 
+
+  //handle modals
+  //handle Modal
+    const [showAddEvent, setShowAddEvent] = useState(false);
+    const [showEditEvent, setShowEditEvent] = useState(false);
+    const [showDelEvent, setShowDelEvent] = useState(false);
+    const [showAssignStaff, setShowAssignStaff] = useState(false);
+     //account settings
+    const [showSetting, setShowSetting] = useState(false)
+
   return (
     <div className="bg-[#E9EDF8] w-screen h-screen flex flex-row overflow-hidden">
       <Sidebar />
       <main className="w-full h-full p-2">
-        <Header />
+        <Header onOpenAccountModal={() => setShowSetting(true)}/>
         <BreadCrumb text2="Manage Events" />
 
         {/* Filter Bar */}
@@ -63,7 +77,7 @@ function ManageEvents() {
             </button>
           </form>
           {/* Add event */}
-          <button type="button" className="px-3 py-1 text-white bg-blue-600 hover:bg-blue-700 cursor-pointer rounded">+ Add Event</button>
+          <button type="button" className="px-3 py-1 text-white bg-blue-600 hover:bg-blue-700 cursor-pointer rounded" onClick={() => setShowAddEvent(true)}>+ Add Event</button>
         </div>
 
         {/* Events Table */}
@@ -115,6 +129,7 @@ function ManageEvents() {
                       <button
                         title="Edit event"
                         className="w-full h-full p-1 flex items-center cursor-pointer justify-center bg-green-500 text-white rounded-sm hover:bg-green-600"
+                        onClick={() => setShowEditEvent(true)}
                       >
                         <FaRegEdit size={20} />
                       </button>
@@ -123,6 +138,7 @@ function ManageEvents() {
                       <button
                         title="Delete event"
                         className="w-full h-full p-1 flex items-center justify-center bg-red-500 text-white rounded-sm hover:bg-red-600"
+                        onClick={() => setShowDelEvent(true)}
                       >
                         <MdDeleteOutline size={20} />
                       </button>
@@ -140,6 +156,19 @@ function ManageEvents() {
           </table>
         </div>
       </main>
+      {showAddEvent && (
+        <AddEvent onClose={() => setShowAddEvent(false)}
+          />
+      )}
+      {showEditEvent && (
+        <EditEvent onClose={() => setShowEditEvent(false)} />
+      )}
+      {showDelEvent && (
+        <DeleteEvent onClose={() => setShowDelEvent(false)}/>
+      )}
+      {showSetting && (
+        <AccountSettings onClose={() => setShowSetting(false)}/>
+      )}
     </div>
   );
 }

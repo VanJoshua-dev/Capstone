@@ -4,6 +4,7 @@ import Header from "../adminComponents/Header";
 import BreadCrumb from "../adminComponents/BreadCrumb";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import AccountSettings from "../adminModals/AccountSettings";
 
 const sampleReports = [
   {
@@ -127,11 +128,14 @@ function Reports() {
       setSortAsc(true);
     }
   };
+
+   //account settings
+    const [showSetting, setShowSetting] = useState(false)
   return (
     <div className="bg-[#E9EDF8] w-screen h-screen flex flex-row overflow-hidden">
       <Sidebar />
       <main className="w-full h-full p-2">
-        <Header />
+        <Header onOpenAccountModal={() => setShowSetting(true)}/>
         <BreadCrumb text2="Reports" />
 
         <div className="">
@@ -231,6 +235,9 @@ function Reports() {
           </div>
         </div>
       </main>
+      {showSetting && (
+        <AccountSettings onClose={() => setShowSetting(false)}/>
+      )}
     </div>
   );
 }

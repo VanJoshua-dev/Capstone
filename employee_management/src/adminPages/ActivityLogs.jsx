@@ -3,6 +3,7 @@ import Sidebar from "../adminComponents/Sidebar";
 import Header from "../adminComponents/Header";
 import BreadCrumb from "../adminComponents/BreadCrumb";
 import clx from "clsx";
+import AccountSettings from "../adminModals/AccountSettings";
 function ActivityLogs() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("");
@@ -160,11 +161,14 @@ function ActivityLogs() {
   const handleNext = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
+
+   //account settings
+    const [showSetting, setShowSetting] = useState(false)
   return (
     <div className="bg-[#E9EDF8] w-screen h-screen flex flex-row overflow-hidden">
       <Sidebar />
       <main className="w-full h-full p-2">
-        <Header />
+        <Header onOpenAccountModal={() => setShowSetting(true)}/>
         <BreadCrumb text2="Activity Logs" />
         <div className="mb-1 flex justify-between items-center">
           <form onSubmit={handleSearch} className="flex gap-1">
@@ -277,6 +281,9 @@ function ActivityLogs() {
           </div>
         </div>
       </main>
+      {showSetting && (
+        <AccountSettings onClose={() => setShowSetting(false)}/>
+      )}
     </div>
   );
 }

@@ -4,6 +4,10 @@ import BreadCrumb from "../adminComponents/BreadCrumb";
 import Sidebar from "../adminComponents/Sidebar";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
+import AddStaff from "../adminModals/AddStaff";
+import EditStaff from "../adminModals/EditStaff";
+import DeleteStaff from "../adminModals/DeleteStaff";
+import AccountSettings from "../adminModals/AccountSettings";
 function ManageStaff() {
   const allStaff = Array.from({ length: 25 }, (_, i) => ({
     staffID: `${i + 1}`.padStart(3, "0"),
@@ -36,11 +40,24 @@ function ManageStaff() {
     currentPage * recordsPerPage
   );
 
+
+  //handle Modal
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDelModal, setShowDelModal] = useState(false);
+  //account settings
+  const [showSetting, setShowSetting] = useState(false)
+
+  const handleAddStaff = (staffData) => {
+    console.log("New Staff:", staffData);
+    // Add logic to send to API or state
+  };
+
   return (
     <div className="bg-[#E9EDF8] w-screen h-screen flex flex-row overflow-hidden">
       <Sidebar />
       <main className="w-full h-full p-2">
-        <Header />
+        <Header onOpenAccountModal={() => setShowSetting(true)}/>
         <BreadCrumb  text2="Manage Staff" />
 
         {/* Filter Bar */}
@@ -64,7 +81,7 @@ function ManageStaff() {
               Search
             </button>
           </div>
-          <button title="Add staff" type="button" className="px-3 py-1 rounded text-white bg-blue-600 hover:bg-blue-700">+ Add Staff</button>
+          <button title="Add staff" type="button" className="px-3 py-1 rounded text-white bg-blue-600 hover:bg-blue-700"  onClick={() => setShowAddModal(true)}>+ Add Staff</button>
         </form>
 
         {/* Staff Table */}
@@ -98,6 +115,7 @@ function ManageStaff() {
                         // onClick={() => openModal("edit", order)}
                         title="Edit staff"
                         className="w-full h-full p-1 flex items-center cursor-pointer justify-center bg-green-500 text-white rounded-sm hover:bg-green-600"
+                        onClick={() => setShowEditModal(true)}
                       >
                         <FaRegEdit size={20} />
                       </button>
@@ -107,6 +125,7 @@ function ManageStaff() {
                         // onClick={() => openModal("delete", order)}
                         title="Delete staff"
                         className="w-full h-full p-1 flex items-center justify-center bg-red-500 text-white rounded-sm hover:bg-red-600"
+                        onClick={() => setShowDelModal(true)}
                       >
                         <MdDeleteOutline size={20} />
                       </button>
@@ -156,6 +175,24 @@ function ManageStaff() {
           </div>
         </div>
       </main>
+      {showAddModal && (
+        <AddStaff
+          onClose={() => setShowAddModal(false)}
+          onSubmit={handleAddStaff}
+        />
+      )}
+      {showEditModal && (
+        <EditStaff  onClose={() => setShowEditModal(false)}
+          onSubmit={handleAddStaff}/>
+      )}
+      {showDelModal && (
+        <DeleteStaff onClose={() => setShowDelModal(false)}
+          onSubmit={handleAddStaff}/>
+      )}
+      {showSetting && (
+        <AccountSettings onClose={() => setShowSetting(false)}/>
+      )}
+
     </div>
   );
 }

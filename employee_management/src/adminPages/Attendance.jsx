@@ -3,6 +3,7 @@ import Header from "../adminComponents/Header";
 import BreadCrumb from "../adminComponents/BreadCrumb";
 import Sidebar from "../adminComponents/Sidebar";
 import clx from "clsx";
+import AccountSettings from "../adminModals/AccountSettings";
 function AttendancePage() {
   const allAttendance = [
     {
@@ -74,11 +75,15 @@ function AttendancePage() {
 
   const displayRecords = showFiltered ? filteredRecords : allAttendance;
 
+
+   //account settings
+      const [showSetting, setShowSetting] = useState(false)
+
   return (
     <div className="bg-[#E9EDF8] w-screen h-screen flex flex-row overflow-hidden">
       <Sidebar />
       <main className="w-full h-full p-2">
-        <Header />
+        <Header onOpenAccountModal={() => setShowSetting(true)}/>
         <BreadCrumb text2="Attendance Records" />
 
         {/* Filters */}
@@ -204,6 +209,9 @@ function AttendancePage() {
           </table>
         </div>
       </main>
+      {showSetting && (
+        <AccountSettings onClose={() => setShowSetting(false)}/>
+      )}
     </div>
   );
 }

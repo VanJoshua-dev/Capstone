@@ -1,11 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdLogin } from "react-icons/md";
 import clx from "clsx";
 import bg from "../assets/mdvImage.jpg";
+import { useNavigate } from "react-router-dom";
 function Login() {
-  const [showPass, setShowPass] = useState(false);
-  const [error, setError] = useState(true);
+  //navigation
+  const navigate = useNavigate()
 
+  const [showPass, setShowPass] = useState(false);
+  const [error, setError] = useState(false);
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  //Clear error 
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        
+      }, 2000); // 5 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  //handle submit
+ const handleSubmit = (e) => {
+    e.preventDefault();
+    // your login logic here
+    if(username === "test" && password === "testpass"){
+      navigate('/admin-dashboard')
+    }else{
+      setError(true)
+    }
+  };
   return (
     <div
       // style={{backgroundImage: `url(${bg})`}}
@@ -15,7 +42,7 @@ function Login() {
         Welcome to Click&Bounce
       </h1>
       <form
-        action=""
+        onSubmit={handleSubmit}
         className="w-full max-w-md bg-white rounded-sm shadow-[0px_0px_18px_0.5px_#D3D3D3]"
       >
         <h1 className="text-2xl rounded-t-sm text-white bg-[#0A1727] font-regular flex items-center gap-2 p-2 px-5">
@@ -38,6 +65,8 @@ function Login() {
             <input
               type="text"
               name="username"
+              value={username} // ✅ value should be the actual state
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter username"
               className="p-2 border border-gray-300 rounded-md"
             />
@@ -50,6 +79,8 @@ function Login() {
             <input
               type={showPass ? "text" : "password"}
               name="password"
+              value={password} // ✅ value should be the actual state
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter password"
               className="p-2 border border-gray-300 rounded-md"
             />
