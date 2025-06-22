@@ -43,7 +43,7 @@ const StaffDashboard = () => {
       date: "2025-06-08 10:12 AM",
     },
   ];
-
+  const name = localStorage.getItem("cb_username");
   // Start QR scanner ;>
   useEffect(() => {
     let html5QrCode;
@@ -103,7 +103,7 @@ const StaffDashboard = () => {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-[#0A1727] px-4 py-3 rounded-md">
         <div className="flex items-center gap-2">
            
-            <span className="text-xl font-semibold text-gray-200">Logged in as Van</span>
+            <span className="text-xl font-semibold text-gray-200">Logged in as {name}</span>
         </div>
         <div className="flex gap-2 justify-center sm:justify-end">
           <button
