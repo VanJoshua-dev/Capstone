@@ -13,7 +13,7 @@ function EditStaff({ onClose, onSubmit }) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("")
-  const [error, setError] = useState(true);
+  const [error, setError] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
