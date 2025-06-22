@@ -32,8 +32,8 @@ const ProfileDropdown = ({ openModal }) => {//open is for the modal component
         onClick={() => setIsOpen(!isOpen)}
       >
         <img
-          className="w-12 rounded-full border-2 border-gray-600"
-          src="https://scontent.fmnl17-3.fna.fbcdn.net/v/t39.30808-1/270149507_109076721648494_4282075989312972371_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=103&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeFmH5kBvP0PBFV67owYe7yFjwZd4hvNVLCPBl3iG81UsKFeeibudOpiRzzReFkF4-EA3o-ayhmgoaKlDp6zIhyD&_nc_ohc=vBHFUWTmzO8Q7kNvwFP-fjE&_nc_oc=AdmespsDy422oyT2J18MEHS3wwbutuOV2TY1FeTBrr8bD4orwHb5nbAE9KQn3u920ZY&_nc_zt=24&_nc_ht=scontent.fmnl17-3.fna&_nc_gid=OxebAImtmAlnXka6klyetw&oh=00_AfO5VTub_ypawTGHzrp_HlZ5pQtEK-9Z0BKbjDn3zlfJlw&oe=684DE0AA"
+          className="w-11 rounded-full border-2 border-gray-600"
+          src="https://scontent.fmnl17-4.fna.fbcdn.net/v/t39.30808-1/480141013_1303731504235485_4806800328640235397_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeFvtvRC20KXp_ygz9OeAUGE5sE_rsIdLMfmwT-uwh0sx2dKm0u909IO9nwyqKrhF3mg9TSPl3-DxMJAWw2dR-49&_nc_ohc=Ih6AL-DZKpgQ7kNvwFyRRKU&_nc_oc=Adk6Ww0ne3ByP0vTV0xxwViRiFtn25rnhXFDuTFfAJPdZfPQ9RuqsOPsSfKxtQPViqI&_nc_zt=24&_nc_ht=scontent.fmnl17-4.fna&_nc_gid=8TRfcslsP_GuW-HzCAx_ZQ&oh=00_AfOdDzMKsJ6AYwJrv0UVpJ4DyMIbcHL10VevfM7umcvvfA&oe=685D9216"
           alt="Meinard"
         />
         <span className="text-lg font-semibold">ImVan</span>

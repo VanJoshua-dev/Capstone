@@ -1,28 +1,40 @@
 import React, { useState } from "react";
 import clx from "clsx";
+
 function AddStaff({ onClose, onSubmit }) {
-  //handle show pass
   const [showPass, setShowPass] = useState(false);
 
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("")
-  const [error, setError] = useState(true);
+  const [phone, setPhone] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !email || !position) {
+    if (!name || !username || !password || !email || !phone) {
       setError("All fields are required.");
       return;
     }
 
-    // Optional: validate email or format
-    setError("");
-    onSubmit?.({ name, email, position }); // call parent handler if provided
-    onClose(); // close modal
+    try {
+      const res = await fetch("http://localhost:5000/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, user: username, pass: password, email, phone }),
+      });
+
+      if (!res.ok) throw new Error("Failed to add staff");
+
+      const data = await res.json();
+      onSubmit?.(data); // send data to parent
+      onClose(); // close modal
+    } catch (err) {
+      console.error(err);
+      setError("Failed to add staff. Try again.");
+    }
   };
 
   return (
@@ -31,47 +43,33 @@ function AddStaff({ onClose, onSubmit }) {
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-white rounded-md shadow-lg"
       >
-        {/* Header */}
         <h1 className="text-2xl rounded-t-md text-white bg-[#0A1727] font-regular flex items-center gap-2 p-4">
           Add Staff +
         </h1>
-        {/* Body */}
+
         <div className="px-5 py-4 flex flex-col gap-4">
-          {/* Error message */}
-          <p
-            className={clx(
-              "text-red-500 text-center text-sm",
-              error ? "" : "hidden"
-            )}
-          >
-            Username already exist.
-          </p>
-          <div className="flex flex-col">
-            <input
-              type="text"
-              name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Staff name"
-              className="p-2 border-2 border-gray-500 rounded-md"
-              required
-            />
-          </div>
+          {error && <p className="text-red-500 text-center text-sm">{error}</p>}
 
-          {/* Username field */}
-          <div className="flex flex-col">
-            <input
-              type="text"
-              name="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Username"
-              className="p-2 border-2 border-gray-500 rounded-md"
-              required
-            />
-          </div>
+          <input
+            type="text"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Staff name"
+            className="p-2 border-2 border-gray-500 rounded-md"
+            required
+          />
 
-          {/* Password field */}
+          <input
+            type="text"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+            className="p-2 border-2 border-gray-500 rounded-md"
+            required
+          />
+
           <div className="flex flex-col gap-1">
             <input
               type={showPass ? "text" : "password"}
@@ -82,7 +80,6 @@ function AddStaff({ onClose, onSubmit }) {
               className="p-2 border-2 border-gray-500 rounded-md"
               required
             />
-             <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -93,34 +90,27 @@ function AddStaff({ onClose, onSubmit }) {
               <label className="text-sm">Show password</label>
             </div>
           </div>
-          </div>
 
-          {/* Show password and forgot password */}
-         
-          <div className="flex flex-col">
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              className="p-2 border-2 border-gray-500 rounded-md"
-              required
-            />
-          </div>
-          <div className="flex flex-col">
-            <input
-              type="number"
-              name="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Phone No."
-              className="p-2 border-2 border-gray-500 rounded-md"
-              required
-            />
-          </div>
+          <input
+            type="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className="p-2 border-2 border-gray-500 rounded-md"
+            required
+          />
 
-          {/* Submit and Cancel buttons */}
+          <input
+            type="number"
+            name="phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Phone No."
+            className="p-2 border-2 border-gray-500 rounded-md"
+            required
+          />
+
           <div className="flex gap-1 justify-end items-center">
             <button
               type="submit"
@@ -128,7 +118,6 @@ function AddStaff({ onClose, onSubmit }) {
             >
               Add Staff
             </button>
-
             <button
               type="button"
               onClick={onClose}

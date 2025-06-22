@@ -2,7 +2,7 @@
    {
     "staffID": 1001,
     "name": "John Doe 1",
-    "useraname": "johndoe1",
+    "username": "johndoe1",
     "password": "pass1",
     "email": "johndoe1@gmailcom",
     "phone": "09166314936"
@@ -10,7 +10,7 @@
    {
     "staffID": 1002,
     "name": "John Doe 2",
-    "useraname": "johndoe2",
+    "username": "johndoe2",
     "password": "pass2",
     "email": "johndoe2@gmailcom",
     "phone": "09177314936"
@@ -18,7 +18,7 @@
    {
     "staffID": 1003,
     "name": "John Doe 3",
-    "useraname": "johndoe3",
+    "username": "johndoe3",
     "password": "pass3",
     "email": "johndoe3@gmailcom",
     "phone": "09122314936"
@@ -26,7 +26,7 @@
    {
     "staffID": 1004,
     "name": "John Doe 4",
-    "useraname": "johndoe4",
+    "username": "johndoe4",
     "password": "pass4",
     "email": "johndoe4@gmailcom",
     "phone": "09133314936"

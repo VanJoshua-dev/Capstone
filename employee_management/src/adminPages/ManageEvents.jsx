@@ -11,6 +11,7 @@ import DeleteEvent from "../adminModals/DeleteEvent";
 import AccountSettings from "../adminModals/AccountSettings";
 import AssignStaff from "../adminModals/AssignStaff";
 
+// ... imports remain the same
 function ManageEvents() {
   const allEvents = [
     {
@@ -29,35 +30,43 @@ function ManageEvents() {
       staffNeed: 13,
       assignedStaff: 13,
     },
+    // Add more event objects if needed
   ];
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("");
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10;
+
   const handleSearch = (e) => {
     e.preventDefault();
     setFilter(searchTerm);
+    setCurrentPage(1); // Reset to page 1 on new search
   };
 
   const filteredEvents = allEvents.filter((event) =>
     event.eventName.toLowerCase().includes(filter.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filteredEvents.length / recordsPerPage);
+  const paginatedEvents = filteredEvents.slice(
+    (currentPage - 1) * recordsPerPage,
+    currentPage * recordsPerPage
+  );
 
-  //handle modals
-  //handle Modal
-    const [showAddEvent, setShowAddEvent] = useState(false);
-    const [showEditEvent, setShowEditEvent] = useState(false);
-    const [showDelEvent, setShowDelEvent] = useState(false);
-    const [showAssignStaff, setShowAssignStaff] = useState(false);
-     //account settings
-    const [showSetting, setShowSetting] = useState(false)
+  // Modal States
+  const [showAddEvent, setShowAddEvent] = useState(false);
+  const [showEditEvent, setShowEditEvent] = useState(false);
+  const [showDelEvent, setShowDelEvent] = useState(false);
+  const [showAssignStaff, setShowAssignStaff] = useState(false);
+  const [showSetting, setShowSetting] = useState(false);
 
   return (
     <div className="bg-[#E9EDF8] w-screen h-screen flex flex-row overflow-hidden">
       <Sidebar />
       <main className="w-full h-full p-2">
-        <Header onOpenAccountModal={() => setShowSetting(true)}/>
+        <Header onOpenAccountModal={() => setShowSetting(true)} />
         <BreadCrumb text2="Manage Events" />
 
         {/* Filter Bar */}
@@ -77,12 +86,17 @@ function ManageEvents() {
               Search
             </button>
           </form>
-          {/* Add event */}
-          <button type="button" className="px-3 py-1 text-white bg-blue-600 hover:bg-blue-700 cursor-pointer rounded" onClick={() => setShowAddEvent(true)}>+ Add Event</button>
+          <button
+            type="button"
+            className="px-3 py-1 text-white bg-blue-600 hover:bg-blue-700 rounded"
+            onClick={() => setShowAddEvent(true)}
+          >
+            + Add Event
+          </button>
         </div>
 
         {/* Events Table */}
-        <div className="rounded overflow-y-auto max-h-[500px]">
+        <div className="rounded overflow-y-auto max-h-[500px] h-full">
           <table className="min-w-full border-collapse text-left border-gray-200">
             <thead className="bg-white">
               <tr>
@@ -97,8 +111,8 @@ function ManageEvents() {
               </tr>
             </thead>
             <tbody>
-              {filteredEvents.length > 0 ? (
-                filteredEvents.map((event) => (
+              {paginatedEvents.length > 0 ? (
+                paginatedEvents.map((event) => (
                   <tr key={event.eventID} className="hover:bg-gray-50">
                     <td className="px-4 py-2">{event.eventID}</td>
                     <td className="px-4 py-2">{event.eventName}</td>
@@ -122,14 +136,17 @@ function ManageEvents() {
                       </span>
                     </td>
                     <td className="px-4 py-2">
-                      <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700" onClick={() => setShowAssignStaff(true)}>
+                      <button
+                        className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                        onClick={() => setShowAssignStaff(true)}
+                      >
                         Assign Staff
                       </button>
                     </td>
                     <td className="px-4 py-2">
                       <button
                         title="Edit event"
-                        className="w-full h-full p-1 flex items-center cursor-pointer justify-center bg-green-500 text-white rounded-sm hover:bg-green-600"
+                        className="w-full p-1 flex justify-center bg-green-500 text-white rounded-sm hover:bg-green-600"
                         onClick={() => setShowEditEvent(true)}
                       >
                         <FaRegEdit size={20} />
@@ -138,7 +155,7 @@ function ManageEvents() {
                     <td className="px-4 py-2">
                       <button
                         title="Delete event"
-                        className="w-full h-full p-1 flex items-center justify-center bg-red-500 text-white rounded-sm hover:bg-red-600"
+                        className="w-full p-1 flex justify-center bg-red-500 text-white rounded-sm hover:bg-red-600"
                         onClick={() => setShowDelEvent(true)}
                       >
                         <MdDeleteOutline size={20} />
@@ -156,23 +173,48 @@ function ManageEvents() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        <div className="mt-2 flex justify-between items-center p-1">
+          <p className="text-sm">
+            Showing{" "}
+            {Math.min(
+              (currentPage - 1) * recordsPerPage + 1,
+              filteredEvents.length
+            )}
+            –
+            {Math.min(currentPage * recordsPerPage, filteredEvents.length)} of{" "}
+            {filteredEvents.length}
+          </p>
+          <div className="flex gap-2">
+            <button
+              className="px-4 py-2 bg-blue-400 disabled:opacity-50"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Prev
+            </button>
+            <button
+              className="px-4 py-2 bg-blue-400 disabled:opacity-50"
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </main>
-      {showAddEvent && (
-        <AddEvent onClose={() => setShowAddEvent(false)}
-          /> 
-      )}
-      {showEditEvent && (
-        <EditEvent onClose={() => setShowEditEvent(false)} />
-      )}
-      {showDelEvent && (
-        <DeleteEvent onClose={() => setShowDelEvent(false)}/>
-      )}
-      {showSetting && (
-        <AccountSettings onClose={() => setShowSetting(false)}/>
-      )}
+
+      {/* Modals */}
+      {showAddEvent && <AddEvent onClose={() => setShowAddEvent(false)} />}
+      {showEditEvent && <EditEvent onClose={() => setShowEditEvent(false)} />}
+      {showDelEvent && <DeleteEvent onClose={() => setShowDelEvent(false)} />}
       {showAssignStaff && (
-        <AssignStaff onClose={() => setShowAssignStaff(false)}/>
+        <AssignStaff onClose={() => setShowAssignStaff(false)} />
       )}
+      {showSetting && <AccountSettings onClose={() => setShowSetting(false)} />}
     </div>
   );
 }

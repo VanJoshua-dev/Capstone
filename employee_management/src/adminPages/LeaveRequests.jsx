@@ -306,7 +306,7 @@ function LeaveRequests() {
         </div>
 
         {/* Requests Table */}
-        <div className="rounded overflow-y-auto max-h-[500px]">
+        <div className="rounded overflow-y-auto max-h-[500px] h-full">
           <table className="min-w-full border-collapse text-left border-gray-200">
             <thead className="bg-white">
               <tr>

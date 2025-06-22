@@ -4,6 +4,7 @@ import BreadCrumb from "../adminComponents/BreadCrumb";
 import Sidebar from "../adminComponents/Sidebar";
 import clx from "clsx";
 import AccountSettings from "../adminModals/AccountSettings";
+
 function AttendancePage() {
   const allAttendance = [
     {
@@ -44,46 +45,46 @@ function AttendancePage() {
     event: "",
     date: "",
   });
-
   const [showFiltered, setShowFiltered] = useState(false);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
-
-    // Trigger real-time filtering only for non-name filters
-    if (name !== "name") {
-      setShowFiltered(true);
-    }
+    setShowFiltered(true);
+    setCurrentPage(1);
   };
 
   const handleNameSearch = () => {
     setShowFiltered(true);
+    setCurrentPage(1);
   };
 
-  const filteredRecords = allAttendance.filter((rec) => {
-    const nameMatch = rec.name
-      .toLowerCase()
-      .includes(filters.name.toLowerCase());
-    const statusMatch = filters.status ? rec.status === filters.status : true;
-    const eventMatch = rec.event
-      .toLowerCase()
-      .includes(filters.event.toLowerCase());
-    const dateMatch = filters.date ? rec.date === filters.date : true;
-    return nameMatch && statusMatch && eventMatch && dateMatch;
-  });
+  const displayRecords = showFiltered
+    ? allAttendance.filter((rec) => {
+        const nameMatch = rec.name.toLowerCase().includes(filters.name.toLowerCase());
+        const statusMatch = filters.status ? rec.status === filters.status : true;
+        const eventMatch = rec.event.toLowerCase().includes(filters.event.toLowerCase());
+        const dateMatch = filters.date ? rec.date === filters.date : true;
+        return nameMatch && statusMatch && eventMatch && dateMatch;
+      })
+    : allAttendance;
 
-  const displayRecords = showFiltered ? filteredRecords : allAttendance;
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10;
+  const paginatedRecords = displayRecords.slice(
+    (currentPage - 1) * recordsPerPage,
+    currentPage * recordsPerPage
+  );
+  const totalPages = Math.ceil(displayRecords.length / recordsPerPage);
 
-
-   //account settings
-      const [showSetting, setShowSetting] = useState(false)
+  const [showSetting, setShowSetting] = useState(false);
 
   return (
     <div className="bg-[#E9EDF8] w-screen h-screen flex flex-row overflow-hidden">
       <Sidebar />
       <main className="w-full h-full p-2">
-        <Header onOpenAccountModal={() => setShowSetting(true)}/>
+        <Header onOpenAccountModal={() => setShowSetting(true)} />
         <BreadCrumb text2="Attendance Records" />
 
         {/* Filters */}
@@ -137,12 +138,11 @@ function AttendancePage() {
         </form>
 
         {/* Table */}
-        <div className="rounded overflow-y-auto max-h-[490px]">
+        <div className="rounded overflow-y-auto max-h-[490px] h-full">
           <table className="min-w-full border-collapse text-left border-gray-200">
             <thead className="bg-white">
               <tr>
                 <th className="px-4 py-2 font-semibold">Attd. ID</th>
-                <th className="px-4 py-2 font-semibold">Avatar</th>
                 <th className="px-4 py-2 font-semibold">Date</th>
                 <th className="px-4 py-2 font-semibold">Staff Name</th>
                 <th className="px-4 py-2 font-semibold">Event</th>
@@ -153,30 +153,20 @@ function AttendancePage() {
               </tr>
             </thead>
             <tbody>
-              {displayRecords.length > 0 ? (
-                displayRecords.map((att, index) => (
+              {paginatedRecords.length > 0 ? (
+                paginatedRecords.map((att, index) => (
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="px-4 py-2">{att.id}</td>
-                    <td className="px-4 py-2">
-                      <img
-                        className="w-10 h-10 rounded-full border-1 border-gray-600"
-                        src="https://scontent.fmnl17-3.fna.fbcdn.net/v/t39.30808-1/270149507_109076721648494_4282075989312972371_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=103&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeFmH5kBvP0PBFV67owYe7yFjwZd4hvNVLCPBl3iG81UsKFeeibudOpiRzzReFkF4-EA3o-ayhmgoaKlDp6zIhyD&_nc_ohc=vBHFUWTmzO8Q7kNvwFP-fjE&_nc_oc=AdmespsDy422oyT2J18MEHS3wwbutuOV2TY1FeTBrr8bD4orwHb5nbAE9KQn3u920ZY&_nc_zt=24&_nc_ht=scontent.fmnl17-3.fna&_nc_gid=OxebAImtmAlnXka6klyetw&oh=00_AfO5VTub_ypawTGHzrp_HlZ5pQtEK-9Z0BKbjDn3zlfJlw&oe=684DE0AA"
-                        alt="Meinard"
-                      />
-                    </td>
                     <td className="px-4 py-2">{att.date}</td>
                     <td className="px-4 py-2">{att.name}</td>
                     <td className="px-4 py-2">{att.event}</td>
                     <td className="px-4 py-2">{att.timeIn || "—"}</td>
                     <td className="px-4 py-2">{att.timeOut || "—"}</td>
                     <td className="px-4 py-2">
-                      {" "}
                       <span
                         className={clx(
                           "py-1 w-full inline-block px-4 rounded text-center",
-                          att.status === "Present"
-                            ? "bg-green-300"
-                            : "bg-red-300"
+                          att.status === "Present" ? "bg-green-300" : "bg-red-300"
                         )}
                       >
                         {att.status}
@@ -200,7 +190,7 @@ function AttendancePage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="text-center py-4">
+                  <td colSpan="9" className="text-center py-4">
                     No attendance records found.
                   </td>
                 </tr>
@@ -208,10 +198,35 @@ function AttendancePage() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        <div className="mt-2 flex justify-between items-center p-1">
+          <p className="text-sm">
+            Showing{" "}
+            {Math.min((currentPage - 1) * recordsPerPage + 1, displayRecords.length)}
+            –
+            {Math.min(currentPage * recordsPerPage, displayRecords.length)} of{" "}
+            {displayRecords.length}
+          </p>
+          <div className="flex gap-2">
+            <button
+              className="px-4 py-2 bg-blue-400 disabled:opacity-50"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Prev
+            </button>
+            <button
+              className="px-4 py-2 bg-blue-400 disabled:opacity-50"
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </main>
-      {showSetting && (
-        <AccountSettings onClose={() => setShowSetting(false)}/>
-      )}
+      {showSetting && <AccountSettings onClose={() => setShowSetting(false)} />}
     </div>
   );
 }

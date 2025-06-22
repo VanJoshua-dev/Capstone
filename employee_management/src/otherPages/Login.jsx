@@ -3,41 +3,48 @@ import { MdLogin } from "react-icons/md";
 import clx from "clsx";
 import bg from "../assets/mdvImage.jpg";
 import { useNavigate } from "react-router-dom";
+
 function Login() {
-  //navigation
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState(false);
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  //Clear error 
+
   useEffect(() => {
     if (error) {
-      const timer = setTimeout(() => {
-        
-      }, 2000); // 5 seconds
-
+      const timer = setTimeout(() => setError(false), 2000);
       return () => clearTimeout(timer);
     }
   }, [error]);
 
-  //handle submit
- const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // your login logic here
-    if(username === "test" && password === "testpass"){
-      navigate('/admin-dashboard')
-    }else{
-      setError(true)
+
+    const fakeUsers = [
+      { username: "test", password: "testpass", role: "staff"},
+      { username: "admin", password: "admin123", role: "admin" },
+    ];
+
+    const userExists = fakeUsers.find(
+      (user) => user.username === username && user.password === password
+    );
+
+    if (userExists) {
+      const sessionId = Math.floor(1000000000 + Math.random() * 9000000000); // random 10-char ID
+      localStorage.setItem("cb_user_session", sessionId);
+      localStorage.setItem("cb_username", username);
+      localStorage.setItem("cb_role", userExists.role);
+      console.log(sessionId)
+      navigate("/verify-login");
+    } else {
+      setError(true);
     }
   };
+
   return (
-    <div
-      // style={{backgroundImage: `url(${bg})`}}
-      className="min-h-screen bg-[#0A1727] w-full flex flex-col bg-center justify-center items-center p-3"
-    >
+    <div className="min-h-screen bg-[#0A1727] w-full flex flex-col justify-center items-center p-3">
       <h1 className="text-2xl text-white text-center font-bold mb-10 lg:text-3xl">
         Welcome to Click&Bounce
       </h1>
@@ -49,12 +56,7 @@ function Login() {
           Login <MdLogin />
         </h1>
         <div className="px-5 py-3 flex flex-col gap-2">
-          <p
-            className={clx(
-              "text-red-500 text-center text-sm",
-              error ? "" : "hidden"
-            )}
-          >
+          <p className={clx("text-red-500 text-center text-sm", error ? "" : "hidden")}>
             Incorrect username or password
           </p>
 
@@ -65,10 +67,11 @@ function Login() {
             <input
               type="text"
               name="username"
-              value={username} // ✅ value should be the actual state
+              value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter username"
               className="p-2 border border-gray-300 rounded-md"
+              required
             />
           </div>
 
@@ -79,14 +82,15 @@ function Login() {
             <input
               type={showPass ? "text" : "password"}
               name="password"
-              value={password} // ✅ value should be the actual state
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter password"
               className="p-2 border border-gray-300 rounded-md"
+              required
             />
           </div>
 
-          <div className="flex flex-row  justify-between items-start sm:items-center gap-2">
+          <div className="flex flex-row justify-between items-start sm:items-center gap-2">
             <div className="flex items-center gap-2">
               <input
                 onChange={() => setShowPass(!showPass)}

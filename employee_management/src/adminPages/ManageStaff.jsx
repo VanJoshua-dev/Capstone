@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../adminComponents/Header";
 import BreadCrumb from "../adminComponents/BreadCrumb";
 import Sidebar from "../adminComponents/Sidebar";
@@ -8,21 +8,40 @@ import AddStaff from "../adminModals/AddStaff";
 import EditStaff from "../adminModals/EditStaff";
 import DeleteStaff from "../adminModals/DeleteStaff";
 import AccountSettings from "../adminModals/AccountSettings";
-function ManageStaff() {
-  const allStaff = Array.from({ length: 25 }, (_, i) => ({
-    staffID: `${i + 1}`.padStart(3, "0"),
-    avatar: "",
-    name: `John Doe ${i + 1}`,
-    user: `johndoe${i + 1}`,
-    pass: `pass${i + 1}`,
-    email: `johndoe${i + 1}@gmail.com`,
-    phone: `091600000${i + 1}`,
-  }));
 
-  const [searchInput, setSearchInput] = useState(""); // Raw input
-  const [search, setSearch] = useState(""); // Confirmed search term
+function ManageStaff() {
+  const [staffList, setStaffList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
+
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
+
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDelModal, setShowDelModal] = useState(false);
+  const [showSetting, setShowSetting] = useState(false);
+
+  const [selectedStaff, setSelectedStaff] = useState(null);
+
+  // Fetch staff data
+  useEffect(() => {
+    const fetchStaff = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/users");
+        if (!res.ok) throw new Error("Failed to fetch staff data");
+        const data = await res.json();
+        setStaffList(data);
+        setLoading(false);
+      } catch (error) {
+        setFetchError(error.message);
+        setLoading(false);
+      }
+    };
+    fetchStaff();
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -30,7 +49,7 @@ function ManageStaff() {
     setCurrentPage(1);
   };
 
-  const filteredStaff = allStaff.filter((staff) =>
+  const filteredStaff = staffList.filter((staff) =>
     staff.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -40,31 +59,25 @@ function ManageStaff() {
     currentPage * recordsPerPage
   );
 
+  const handleAddStaff = (newStaff) => {
+    setStaffList((prev) => [...prev, newStaff]);
+  };
 
-  //handle Modal
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDelModal, setShowDelModal] = useState(false);
-  //account settings
-  const [showSetting, setShowSetting] = useState(false)
-
-  const handleAddStaff = (staffData) => {
-    console.log("New Staff:", staffData);
-    // Add logic to send to API or state
+  const handleUpdateStaff = (updatedStaff) => {
+    setStaffList((prev) =>
+      prev.map((s) => (s.id === updatedStaff.id ? updatedStaff : s))
+    );
   };
 
   return (
     <div className="bg-[#E9EDF8] w-screen h-screen flex flex-row overflow-hidden">
       <Sidebar />
       <main className="w-full h-full p-2">
-        <Header onOpenAccountModal={() => setShowSetting(true)}/>
-        <BreadCrumb  text2="Manage Staff" />
+        <Header onOpenAccountModal={() => setShowSetting(true)} />
+        <BreadCrumb text2="Manage Staff" />
 
         {/* Filter Bar */}
-        <form
-          className="flex justify-between items-cente mb-1"
-          onSubmit={handleSearch}
-        >
+        <form className="flex justify-between mb-1" onSubmit={handleSearch}>
           <div className="flex gap-1">
             <input
               type="text"
@@ -74,73 +87,90 @@ function ManageStaff() {
               onChange={(e) => setSearchInput(e.target.value)}
             />
             <button
-            title="Tap to search"
               type="submit"
-              className="px-3 py-1 bg-blue-600 text-white rounded  hover:bg-blue-700 cursor-pointer"
+              title="Tap to search"
+              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
               Search
             </button>
           </div>
-          <button title="Add staff" type="button" className="px-3 py-1 rounded text-white bg-blue-600 hover:bg-blue-700"  onClick={() => setShowAddModal(true)}>+ Add Staff</button>
+          <button
+            type="button"
+            title="Add staff"
+            className="px-3 py-1 rounded text-white bg-blue-600 hover:bg-blue-700"
+            onClick={() => setShowAddModal(true)}
+          >
+            + Add Staff
+          </button>
         </form>
 
         {/* Staff Table */}
-        <div className=" rounded overflow-y-auto max-h-[490px]">
-          <table className="min-w-full border-collapse text-left border-gray-200">
-            <thead className="bg-white ">
-              <tr>
-                <th className="px-4 py-2 font-semibold">Staff ID</th>
-                <th className="px-4 py-2 font-semibold">Name</th>
-                <th className="px-4 py-2 font-semibold">Username</th>
-                <th className="px-4 py-2 font-semibold">Password</th>
-                <th className="px-4 py-2 font-semibold">Email</th>
-                <th className="px-4 py-2 font-semibold">Phone No.</th>
-                <th className="px-4 py-2 text-center font-semibold" colSpan={2}>
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedData.length > 0 ? (
-                paginatedData.map((staff, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-4 py-2">{staff.staffID}</td>
-                    <td className="px-4 py-2">{staff.name}</td>
-                    <td className="px-4 py-2">{staff.user}</td>
-                    <td className="px-4 py-2">{staff.pass}</td>
-                    <td className="px-4 py-2">{staff.email}</td>
-                    <td className="px-4 py-2">{staff.phone}</td>
-                    <td className="px-4 py-2">
-                      <button
-                        // onClick={() => openModal("edit", order)}
-                        title="Edit staff"
-                        className="w-full h-full p-1 flex items-center cursor-pointer justify-center bg-green-500 text-white rounded-sm hover:bg-green-600"
-                        onClick={() => setShowEditModal(true)}
-                      >
-                        <FaRegEdit size={20} />
-                      </button>
-                    </td>
-                    <td className="px-4 py-2">
-                      <button
-                        // onClick={() => openModal("delete", order)}
-                        title="Delete staff"
-                        className="w-full h-full p-1 flex items-center justify-center bg-red-500 text-white rounded-sm hover:bg-red-600"
-                        onClick={() => setShowDelModal(true)}
-                      >
-                        <MdDeleteOutline size={20} />
-                      </button>
+        <div className="rounded overflow-y-auto max-h-[490px] h-full">
+          {loading ? (
+            <p className="p-4">Loading staff data...</p>
+          ) : fetchError ? (
+            <p className="p-4 text-red-600">{fetchError}</p>
+          ) : (
+            <table className="min-w-full border-collapse text-left border-gray-200">
+              <thead className="bg-white">
+                <tr>
+                  <th className="px-4 py-2 font-semibold">Staff ID</th>
+                  <th className="px-4 py-2 font-semibold">Name</th>
+                  <th className="px-4 py-2 font-semibold">Username</th>
+                  <th className="px-4 py-2 font-semibold">Password</th>
+                  <th className="px-4 py-2 font-semibold">Email</th>
+                  <th className="px-4 py-2 font-semibold">Phone No.</th>
+                  <th className="px-4 py-2 text-center font-semibold" colSpan={2}>
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedData.length > 0 ? (
+                  paginatedData.map((staff, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-4 py-2">{staff.staffID}</td>
+                      <td className="px-4 py-2">{staff.name}</td>
+                      <td className="px-4 py-2">{staff.username}</td>
+                      <td className="px-4 py-2">{staff.password}</td>
+                      <td className="px-4 py-2">{staff.email}</td>
+                      <td className="px-4 py-2">{staff.phone}</td>
+                      <td className="px-4 py-2">
+                        <button
+                          title="Edit staff"
+                          className="w-full p-1 flex justify-center bg-green-500 text-white rounded-sm hover:bg-green-600"
+                          onClick={() => {
+                            setSelectedStaff(staff);
+                            setShowEditModal(true);
+                          }}
+                        >
+                          <FaRegEdit size={20} />
+                        </button>
+                      </td>
+                      <td className="px-4 py-2">
+                        <button
+                          title="Delete staff"
+                          className="w-full p-1 flex justify-center bg-red-500 text-white rounded-sm hover:bg-red-600"
+                          onClick={() => {
+                            setSelectedStaff(staff);
+                            setShowDelModal(true);
+                          }}
+                        >
+                          <MdDeleteOutline size={20} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="9" className="text-center py-4">
+                      No matching staff found.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="9" className="text-center py-4">
-                    No matching staff found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* Pagination */}
@@ -151,20 +181,20 @@ function ManageStaff() {
               (currentPage - 1) * recordsPerPage + 1,
               filteredStaff.length
             )}
-            –{Math.min(currentPage * recordsPerPage, filteredStaff.length)} of{" "}
+            –
+            {Math.min(currentPage * recordsPerPage, filteredStaff.length)} of{" "}
             {filteredStaff.length}
           </p>
           <div className="flex gap-2">
             <button
-              title="Edit staff record."
-              className="px-4 py-2 bg-blue-400  disabled:opacity-50"
+              className="px-4 py-2 bg-blue-400 disabled:opacity-50"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
               Prev
             </button>
             <button
-              className="px-4 py-2 bg-blue-400  disabled:opacity-50"
+              className="px-4 py-2 bg-blue-400 disabled:opacity-50"
               onClick={() =>
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
@@ -175,24 +205,29 @@ function ManageStaff() {
           </div>
         </div>
       </main>
+
+      {/* Modals */}
       {showAddModal && (
-        <AddStaff
-          onClose={() => setShowAddModal(false)}
-          onSubmit={handleAddStaff}
+        <AddStaff onClose={() => setShowAddModal(false)} onSubmit={handleAddStaff} />
+      )}
+      {showEditModal && selectedStaff && (
+        <EditStaff
+          user={selectedStaff}
+          onClose={() => setShowEditModal(false)}
+          onSubmit={handleUpdateStaff}
         />
       )}
-      {showEditModal && (
-        <EditStaff  onClose={() => setShowEditModal(false)}
-          onSubmit={handleAddStaff}/>
+      {showDelModal && selectedStaff && (
+        <DeleteStaff
+          user={selectedStaff}
+          onClose={() => setShowDelModal(false)}
+          onSubmit={(deletedUser) => {
+            setStaffList((prev) => prev.filter((u) => u.id !== deletedUser.id));
+            setShowDelModal(false);
+          }}
+        />
       )}
-      {showDelModal && (
-        <DeleteStaff onClose={() => setShowDelModal(false)}
-          onSubmit={handleAddStaff}/>
-      )}
-      {showSetting && (
-        <AccountSettings onClose={() => setShowSetting(false)}/>
-      )}
-
+      {showSetting && <AccountSettings onClose={() => setShowSetting(false)} />}
     </div>
   );
 }

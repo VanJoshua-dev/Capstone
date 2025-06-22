@@ -36,6 +36,24 @@ app.post("/api/users", (req, res) => {
     }
 });
 
+app.put("/api/users/:id", (req, res) => {
+  try {
+    const users = JSON.parse(fs.readFileSync(usersFilePath, "utf-8"));
+    const userId = parseInt(req.params.id);
+    const updatedUser = req.body;
+
+    const index = users.findIndex((u) => u.id === userId);
+    if (index === -1) return res.status(404).json({ error: "User not found" });
+
+    users[index] = { ...users[index], ...updatedUser };
+    fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
+
+    res.json(users[index]);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update user" });
+  }
+});
+
 // Root route
 app.get("/", (req, res) => {
     res.send(`<h1 style='color: green; width: 100%; height: 70vh; text-align: center; font-size: 5rem; display: flex; justify-content: center; align-items: center;'>Server is Running...</h1>`);
