@@ -102,12 +102,7 @@ function Login() {
               />
               <label className="text-sm">Show password</label>
             </div>
-            <a
-              href="/forgot-password"
-              className="text-sm text-blue-500 hover:underline"
-            >
-              Forgot password?
-            </a>
+            <button  className="text-sm text-blue-500 hover:underline" onClick={() => navigate("/forgot-password")}>Forgot password?</button>
           </div>
 
           <button

@@ -46,6 +46,8 @@ function App() {
           <Route path="/assign-staff" element={<AssignStaffUI />} />
           {/* staff-dashboard */}
           <Route path="/staff-dashboard" element={<StaffDashboard />} />
+
+          <Route path="*" element={<StaffDashboard />} />
           
         </Routes>
     </>

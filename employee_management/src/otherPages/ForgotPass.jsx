@@ -4,7 +4,7 @@ import clx from "clsx";
 import bg from "../assets/mdvImage.jpg";
 function ForgotPass() {
   const [showPass, setShowPass] = useState(false);
-  const [error, setError] = useState(true);
+  const [error, setError] = useState(false);
 
   return (
     <div
