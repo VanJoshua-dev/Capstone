@@ -9,6 +9,7 @@ import AddEvent from "../adminModals/AddEvent";
 import EditEvent from "../adminModals/EditEvent";
 import DeleteEvent from "../adminModals/DeleteEvent";
 import AccountSettings from "../adminModals/AccountSettings";
+import AssignStaff from "../adminModals/AssignStaff";
 
 function ManageEvents() {
   const allEvents = [
@@ -121,7 +122,7 @@ function ManageEvents() {
                       </span>
                     </td>
                     <td className="px-4 py-2">
-                      <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+                      <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700" onClick={() => setShowAssignStaff(true)}>
                         Assign Staff
                       </button>
                     </td>
@@ -158,7 +159,7 @@ function ManageEvents() {
       </main>
       {showAddEvent && (
         <AddEvent onClose={() => setShowAddEvent(false)}
-          />
+          /> 
       )}
       {showEditEvent && (
         <EditEvent onClose={() => setShowEditEvent(false)} />
@@ -168,6 +169,9 @@ function ManageEvents() {
       )}
       {showSetting && (
         <AccountSettings onClose={() => setShowSetting(false)}/>
+      )}
+      {showAssignStaff && (
+        <AssignStaff onClose={() => setShowAssignStaff(false)}/>
       )}
     </div>
   );
