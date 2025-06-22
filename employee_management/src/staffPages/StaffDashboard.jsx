@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Html5Qrcode } from "html5-qrcode";
-
+import { useNavigate } from "react-router-dom";
 const StaffDashboard = () => {
   const [showScanner, setShowScanner] = useState(false);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [leaveForm, setLeaveForm] = useState({ date: "", reason: "" });
-
+  const navigate = useNavigate()
   const assignedEvents = [
     {
       id: 1,
@@ -86,6 +86,11 @@ const StaffDashboard = () => {
     };
   }, [showScanner]);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/")
+  }
+
   const handleLeaveSubmit = (e) => {
     e.preventDefault();
     alert(`Leave Requested: ${leaveForm.date} - ${leaveForm.reason}`);
@@ -103,16 +108,23 @@ const StaffDashboard = () => {
         <div className="flex gap-2 justify-center sm:justify-end">
           <button
             onClick={() => setShowScanner(true)}
-            className="bg-green-600 text-white px-4 py-1.5 text-sm rounded"
+            className="bg-green-600 text-white hover:bg-green-700 px-4 py-1.5 text-sm rounded"
           >
             QR Scanner
           </button>
           <button
             onClick={() => setShowLeaveModal(true)}
-            className="bg-blue-600 text-white px-4 py-1.5 text-sm rounded"
+            className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-1.5 text-sm rounded"
           >
             Request Leave
           </button>
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 text-white hover:bg-red-700 px-4 py-1.5 text-sm rounded"
+          >
+            Logout
+          </button>
+          
         </div>
       </div>
 

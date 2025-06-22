@@ -16,14 +16,18 @@ function LoginVerificaton() {
   }, [error]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    const role = localStorage.getItem("cd_role");
+    const role = localStorage.getItem("cb_role");
     const code = localStorage.getItem("cb_user_session");
+    console.log(role);
+    
     if (code != mycode) {
       setError(true);
     } else {
-      role === "admin"
-        ? navigate("/admin-dashboard")
-        : navigate("/staff-dashboard");
+      if(role === "admin"){
+        navigate("/admin-dashboard")
+      }else if(role === "staff"){
+        navigate("/staff-dashboard")
+      }
     }
   };
   return (

@@ -36,7 +36,9 @@ function Login() {
       localStorage.setItem("cb_user_session", sessionId);
       localStorage.setItem("cb_username", username);
       localStorage.setItem("cb_role", userExists.role);
-      console.log(sessionId)
+      console.log("Code: ", sessionId)
+      console.log("Role: ", userExists.role )
+      alert("Copy this code: "+ sessionId)
       navigate("/verify-login");
     } else {
       setError(true);
