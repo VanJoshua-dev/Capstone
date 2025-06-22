@@ -3,10 +3,11 @@ import { MdLogin } from "react-icons/md";
 import clx from "clsx";
 import bg from "../assets/mdvImage.jpg";
 import { useNavigate } from "react-router-dom";
-
+import AlertCodeLogin from "../alerts/AlertCodeLogin";
+AlertCodeLogin
 function Login() {
   const navigate = useNavigate();
-
+  const [code, setCode] = useState(null);//code alert
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState(false);
   const [username, setUsername] = useState("");
@@ -38,8 +39,7 @@ function Login() {
       localStorage.setItem("cb_role", userExists.role);
       console.log("Code: ", sessionId)
       console.log("Role: ", userExists.role )
-      alert("Copy this code: "+ sessionId)
-      navigate("/verify-login");
+      setCode(sessionId)
     } else {
       setError(true);
     }
@@ -47,6 +47,7 @@ function Login() {
 
   return (
     <div className="min-h-screen bg-[#0A1727] w-full flex flex-col justify-center items-center p-3">
+      {code && <AlertCodeLogin message={`Your verification code: `} code={code} />}
       <h1 className="text-2xl text-white text-center font-bold mb-10 lg:text-3xl">
         Welcome to Click&Bounce
       </h1>

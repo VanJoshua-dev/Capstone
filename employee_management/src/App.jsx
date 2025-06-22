@@ -17,6 +17,7 @@ import ForgotPass from './otherPages/ForgotPass';
 import VerifyCode from './otherPages/VerifyCode';
 import ResetPass from './otherPages/ResetPass';
 import LoginVerificaton from './otherPages/LoginVerification';
+import NotFound from './pageError/NotFound';
 function App() {
  
 
@@ -47,7 +48,7 @@ function App() {
           {/* staff-dashboard */}
           <Route path="/staff-dashboard" element={<StaffDashboard />} />
 
-          <Route path="*" element={<StaffDashboard />} />
+          <Route path="*" element={<NotFound />} />
           
         </Routes>
     </>

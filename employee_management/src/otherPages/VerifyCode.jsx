@@ -1,10 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdLogin } from "react-icons/md";
 import clx from "clsx";
 import bg from "../assets/mdvImage.jpg";
+import { useNavigate } from "react-router-dom";
 function VerifyCode() {
   const [showPass, setShowPass] = useState(false);
-  const [error, setError] = useState(true);
+  const [error, setError] = useState(false);
+  const [mycode, setMyCode] = useState("")
+  const fpcode = localStorage.getItem("fp_code")
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+      if (error) {
+        const timer = setTimeout(() => setError(false), 2000);
+        return () => clearTimeout(timer);
+      }
+    }, [error]);
+  const handleVerify = (e) => {
+    e.preventDefault()
+    if(mycode != fpcode){
+      setError(true)
+    }else{
+      navigate("/reset-password")
+    }
+  }
 
   return (
     <div
@@ -13,7 +33,7 @@ function VerifyCode() {
     >
      
       <form
-        action=""
+        onSubmit={handleVerify}
         className="w-full max-w-md bg-white rounded-sm shadow-[0px_0px_18px_0.5px_#D3D3D3]"
       >
         <h1 className="text-2xl rounded-t-sm text-white bg-[#0A1727] font-regular flex items-center gap-2 p-2 px-5">
@@ -35,6 +55,8 @@ function VerifyCode() {
             </label>
             <input
               type="number"
+              value={mycode}
+              onChange={(e) => setMyCode(e.target.value)}
               name="username"
               placeholder="Enter verification code"
               className="p-2 border border-gray-300 rounded-md"
