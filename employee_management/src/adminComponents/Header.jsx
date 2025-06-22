@@ -22,9 +22,10 @@ const ProfileDropdown = ({ openModal }) => {//open is for the modal component
 
   //handle logout
   const handleLogout = () => {
-    navigate("")
+    localStorage.clear();
+    navigate("/")
   }
-
+  const name = localStorage.getItem("cb_username")
   return (
     <div className="relative" ref={dropdownRef}>
       <div
@@ -36,7 +37,7 @@ const ProfileDropdown = ({ openModal }) => {//open is for the modal component
           src="https://scontent.fmnl17-4.fna.fbcdn.net/v/t39.30808-1/480141013_1303731504235485_4806800328640235397_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeFvtvRC20KXp_ygz9OeAUGE5sE_rsIdLMfmwT-uwh0sx2dKm0u909IO9nwyqKrhF3mg9TSPl3-DxMJAWw2dR-49&_nc_ohc=Ih6AL-DZKpgQ7kNvwFyRRKU&_nc_oc=Adk6Ww0ne3ByP0vTV0xxwViRiFtn25rnhXFDuTFfAJPdZfPQ9RuqsOPsSfKxtQPViqI&_nc_zt=24&_nc_ht=scontent.fmnl17-4.fna&_nc_gid=8TRfcslsP_GuW-HzCAx_ZQ&oh=00_AfOdDzMKsJ6AYwJrv0UVpJ4DyMIbcHL10VevfM7umcvvfA&oe=685D9216"
           alt="Meinard"
         />
-        <span className="text-lg font-semibold">ImVan</span>
+        <span className="text-lg font-semibold">{name}</span>
       </div>
 
       {isOpen && (
