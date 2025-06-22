@@ -3,6 +3,7 @@ import { MdLogin } from "react-icons/md";
 import clx from "clsx";
 import bg from "../assets/mdvImage.jpg";
 import { useNavigate } from "react-router-dom";
+import AlertPassReset from "../alerts/AlertResetPass";
 function VerifyCode() {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState(false);
@@ -31,7 +32,8 @@ function VerifyCode() {
       // style={{backgroundImage: `url(${bg})`}}
       className="min-h-screen bg-[#0A1727] w-full flex flex-col bg-center justify-center items-center p-3"
     >
-     
+
+    
       <form
         onSubmit={handleVerify}
         className="w-full max-w-md bg-white rounded-sm shadow-[0px_0px_18px_0.5px_#D3D3D3]"
