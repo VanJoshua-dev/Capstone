@@ -1,5 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const mysql = require("mysql2/promise");
 const fs = require("fs");
 const path = require("path");
 
@@ -9,51 +11,35 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
-// Path to users.json
-const usersFilePath = path.join(__dirname, "users.json");
+let conn; 
 
-// GET all users
-app.get("/api/users", (req, res) => {
+async function connectDB() {//Configure database connection
     try {
-        const users = JSON.parse(fs.readFileSync(usersFilePath, "utf-8"));
-        res.json(users);
+        conn = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASS,
+            database: process.env.DB_NAME,
+            port: process.env.DB_PORT,
+        });
+
+        console.log("Connected to the database");
+    } catch (err) {
+        console.error("Database connection failed:", err);
+    }
+}
+
+
+connectDB();// Call the function to establish the connection
+app.get("/api/test-db", async (req, res) => {//Test connection
+    try {
+        const [results] = await conn.query("SELECT NOW() AS currentTime");
+
+        res.json({ message: "Database connected successfully!", results });
     } catch (error) {
-        res.status(500).json({ error: "Failed to read users.json" });
+        res.status(500).json({ error: error.message });
     }
 });
-
-// POST a new user
-app.post("/api/users", (req, res) => {
-    try {
-        const users = JSON.parse(fs.readFileSync(usersFilePath, "utf-8"));
-        const newUser = req.body;
-        newUser.id = users.length + 1;
-        users.push(newUser);
-        fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
-        res.status(201).json(newUser);
-    } catch (error) {
-        res.status(500).json({ error: "Failed to write to users.json" });
-    }
-});
-
-app.put("/api/users/:id", (req, res) => {
-  try {
-    const users = JSON.parse(fs.readFileSync(usersFilePath, "utf-8"));
-    const userId = parseInt(req.params.id);
-    const updatedUser = req.body;
-
-    const index = users.findIndex((u) => u.id === userId);
-    if (index === -1) return res.status(404).json({ error: "User not found" });
-
-    users[index] = { ...users[index], ...updatedUser };
-    fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
-
-    res.json(users[index]);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to update user" });
-  }
-});
-
 // Root route
 app.get("/", (req, res) => {
     res.send(`<h1 style='color: green; width: 100%; height: 70vh; text-align: center; font-size: 5rem; display: flex; justify-content: center; align-items: center;'>Server is Running...</h1>`);

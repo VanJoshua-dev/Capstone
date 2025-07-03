@@ -52,7 +52,6 @@ const StaffDashboard = () => {
       const qrRegionId = "qr-reader";
 
       // Reset instance
-      // PUTEK AYOKO NA!!!!
       Html5Qrcode.getCameras()
         .then(() => {
           html5QrCode = new Html5Qrcode(qrRegionId);
