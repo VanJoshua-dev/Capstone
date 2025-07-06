@@ -4,50 +4,63 @@ import clx from "clsx";
 import bg from "../assets/mdvImage.jpg";
 import { useNavigate } from "react-router-dom";
 import AlertCodeLogin from "../alerts/AlertCodeLogin";
-AlertCodeLogin
 function Login() {
   const navigate = useNavigate();
-  const [code, setCode] = useState(null);//code alert
   const [showPass, setShowPass] = useState(false);
-  const [error, setError] = useState(false);
+  const [myerror, setError] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    if (error) {
+    if (myerror) {
       const timer = setTimeout(() => setError(false), 2000);
       return () => clearTimeout(timer);
     }
-  }, [error]);
+  }, [myerror]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const fakeUsers = [
-      { username: "test", password: "testpass", role: "staff"},
-      { username: "admin", password: "admin123", role: "admin" },
-    ];
+    if (!username || !password) {
+      setError(true);
+      return;
+    }
 
-    const userExists = fakeUsers.find(
-      (user) => user.username === username && user.password === password
-    );
+    try {
+      const response = await fetch("http://localhost:5003/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+        credentials: "include"
+      });
 
-    if (userExists) {
-      const sessionId = Math.floor(1000000000 + Math.random() * 9000000000); // random 10-char ID
-      localStorage.setItem("cb_user_session", sessionId);
-      localStorage.setItem("cb_username", username);
-      localStorage.setItem("cb_role", userExists.role);
-      console.log("Code: ", sessionId)
-      console.log("Role: ", userExists.role )
-      setCode(sessionId)
-    } else {
+      const result = await response.json();
+
+      // const fullName = result.employee.fullName
+      // const nameParts = fullName.trim().split(" ");
+
+      // let firstName;
+      // if (nameParts.length >= 2) {
+      //   firstName = nameParts[0] + " " + nameParts[1]; // "Van Joshua"
+      // } else {
+      //   firstName = nameParts[0]; // fallback for single-word name
+      // }
+
+      // console.log(firstName);
+
+      if (!response.ok) {
+        setError(true);
+      } else {
+        navigate("/verify-login");
+      }
+    } catch (error) {
+      console.error("Fetch Error:", error);
       setError(true);
     }
   };
 
   return (
     <div className="min-h-screen bg-[#0A1727] w-full flex flex-col justify-center items-center p-3">
-      {code && <AlertCodeLogin message={`Your verification code: `} code={code} />}
       <h1 className="text-2xl text-white text-center font-bold mb-10 lg:text-3xl">
         Welcome to Click&Bounce
       </h1>
@@ -59,7 +72,12 @@ function Login() {
           Login <MdLogin />
         </h1>
         <div className="px-5 py-3 flex flex-col gap-2">
-          <p className={clx("text-red-500 text-center text-sm", error ? "" : "hidden")}>
+          <p
+            className={clx(
+              "text-red-500 text-center text-sm",
+              myerror ? "" : "hidden"
+            )}
+          >
             Incorrect username or password
           </p>
 
@@ -103,7 +121,12 @@ function Login() {
               />
               <label className="text-sm">Show password</label>
             </div>
-            <button  className="text-sm text-blue-500 hover:underline" onClick={() => navigate("/forgot-password")}>Forgot password?</button>
+            <button
+              className="text-sm text-blue-500 hover:underline"
+              onClick={() => navigate("/forgot-password")}
+            >
+              Forgot password?
+            </button>
           </div>
 
           <button

@@ -1,0 +1,125 @@
+require("dotenv").config();
+
+//firebase
+const { db } = require("./firebase");
+// send to email
+const sendVerificationCode = require("./sendCode");
+const {
+    addDoc,
+    collection,
+    serverTimestamp,
+    doc,
+    getDoc,
+    setDoc,
+} = require("firebase/firestore");
+//cookies
+const cookie = require("cookie");
+
+const express = require("express");
+const cors = require("cors");
+const mysql = require("mysql2/promise");
+const fs = require("fs");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
+
+const app = express();
+const PORT = 5004;
+
+app.use(cors());
+app.use(express.json());
+
+// Create the MySQL connection pool
+const pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+});
+
+// Test DB connection endpoint
+app.get("/api/test-db", async (req, res) => {
+    try {
+        const [results] = await pool.query("SELECT NOW() AS currentTime");
+        res.json({ message: "Database connected successfully!", results });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/api/verifyEmail", async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) return res.status(400).json({ message: "Email is required" });
+
+  try {
+    // Use placeholders (?) to prevent SQL injection
+    const [rows] = await pool.query("SELECT email FROM employees WHERE email = ?", [email]);
+
+    if (rows.length > 0) {
+      await requestCode(email, res); // Pass both email and res
+    } else {
+      res.status(404).json({ message: "The email you entered does not exist in our system." });
+    }
+  } catch (error) {
+    console.error("DB error:", error);
+    res.status(500).json({ message: "Failed to verify email" });
+  }
+});
+
+// Helper function to generate and send code
+const generateCode = () => Math.floor(100000 + Math.random() * 900000).toString();
+
+async function requestCode(email, res) {
+  const code = generateCode();
+  const authId = uuidv4();
+
+  try {
+    await setDoc(doc(db, "authCode", authId), {
+      email,
+      code,
+      createdAt: serverTimestamp(),
+    });
+
+    res.setHeader("Set-Cookie", [
+      cookie.serialize("email", email, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 300,
+        path: "/",
+      }),
+      cookie.serialize("authId", authId, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 300,
+        path: "/",
+      }),
+    ]);
+    sendVerificationCode(email, code)
+    console.log(`Verification code for ${email}: ${code}`);
+    res.status(200).json({ message: "Verification code sent to your email." });
+  } catch (error) {
+    console.error("Error generating code:", error);
+    res.status(500).json({ error: "Failed to generate code." });
+  }
+}
+// Random code generator
+
+
+
+// Root route
+app.get("/", (req, res) => {
+    res.send(
+        `<h1 style='color: green; width: 100%; height: 70vh; text-align: center; font-size: 5rem; display: flex; justify-content: center; align-items: center;'>Server for verify email is Running...</h1>`
+    );
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});

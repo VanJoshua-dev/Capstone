@@ -4,9 +4,9 @@ import clx from "clsx";
 import bg from "../assets/mdvImage.jpg";
 import { useNavigate } from "react-router-dom";
 function LoginVerificaton() {
-  const [showPass, setShowPass] = useState(false);
-  const [mycode, setMyCode] = useState("");
+  const [code, setCode] = useState("");
   const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("")
   const navigate = useNavigate();
   useEffect(() => {
     if (error) {
@@ -14,20 +14,31 @@ function LoginVerificaton() {
       return () => clearTimeout(timer);
     }
   }, [error]);
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const role = localStorage.getItem("cb_role");
-    const code = localStorage.getItem("cb_user_session");
-    console.log(role);
-    
-    if (code != mycode) {
+    if (!code) {
       setError(true);
-    } else {
-      if(role === "admin"){
-        navigate("/admin-dashboard")
-      }else if(role === "staff"){
-        navigate("/staff-dashboard")
+    }
+    try {
+      const response = await fetch("http://localhost:5003/api/verify-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ code }),
+        
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(true);
+        setErrorMessage("Invalid code. Check your email.")
+      } else {
+        navigate("/staff-dashboard");
       }
+    } catch (error) {
+      setError(true);
+      setErrorMessage("Something went wrong please try again.");
     }
   };
   return (
@@ -45,22 +56,22 @@ function LoginVerificaton() {
         <div className="px-5 py-3 flex flex-col gap-2">
           <p
             className={clx(
-              "text-red-500 text-center text-sm",
+              'text-red-500 text-center text-sm',
               error ? "" : "hidden"
             )}
           >
-            Invalid code. Please try again.
+            {errorMessage}
           </p>
 
           <div className="flex flex-col">
-            <label htmlFor="username" className="text-lg">
+            <label htmlFor="code" className="text-lg">
               Code sent to your email
             </label>
             <input
-              type="number"
-              value={mycode}
-              onChange={(e) => setMyCode(e.target.value)}
-              name="username"
+              type="text"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              name="code"
               placeholder="Enter verification code"
               className="p-2 border border-gray-300 rounded-md"
             />

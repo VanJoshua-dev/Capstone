@@ -1,23 +1,18 @@
-// Import the functions you need from the SDKs you need
+
+require("dotenv").config();
 const { initializeApp } = require("firebase/app") ;
 const { getFirestore } = require("firebase/firestore");
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+//Nope
 const firebaseConfig = {
-  apiKey: "AIzaSyB3ucZgEMoyhdeQkedU4s0eMuWwgONA_Cc",
-  authDomain: "clickandbounce.firebaseapp.com",
-  projectId: "clickandbounce",
-  storageBucket: "clickandbounce.firebasestorage.app",
-  messagingSenderId: "246467571168",
-  appId: "1:246467571168:web:c6557e3f1004ac9296cf85",
-  measurementId: "G-JX53JR5C1Y"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 

@@ -1,8 +1,7 @@
 require("dotenv").config();
 
 //firebase
-const { db } = require("./firebase"); 
-const { addDoc, collection, serverTimestamp } = require("firebase/firestore");
+
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
@@ -37,19 +36,18 @@ app.get("/api/test-db", async (req, res) => {
   }
 });
 
-async function AuthCode(email, code) {
-  try {
-    const docRef = await addDoc(collection(db, "authCode"), { email, code,  createdAt: serverTimestamp() });
-    console.log("User added with ID:", docRef.id);
-  } catch (error) {
-    console.error("Error adding user:", error);
+app.get("/api/employees", async (req, res) => {// Fetch all employees
+  try{
+    const [employees] = await pool.query("SELECT fullName FROM employees WHERE isDeleted = false")
+    res.json({ message: "All Employees", employees });
+  }catch(error){
+     res.status(500).json({ error: error.message });
   }
-}
+})
 
 
 // Root route
 app.get("/", (req, res) => {
- AuthCode("test@example.com", "123456");
   res.send(
     `<h1 style='color: green; width: 100%; height: 70vh; text-align: center; font-size: 5rem; display: flex; justify-content: center; align-items: center;'>Server is Running...</h1>`
   );
