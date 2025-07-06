@@ -22,7 +22,7 @@ const ProfileDropdown = ({ openModal }) => {//open is for the modal component
 
   //handle logout
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.clear(); 
     navigate("/")
   }
   const name = localStorage.getItem("cb_username")

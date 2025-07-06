@@ -30,23 +30,22 @@ function Login() {
       const response = await fetch("http://localhost:5003/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ username, password }),
-        credentials: "include"
       });
 
       const result = await response.json();
 
-      // const fullName = result.employee.fullName
-      // const nameParts = fullName.trim().split(" ");
+      const fullName = result.employee.fullName
+      const nameParts = fullName.trim().split(" ");
 
-      // let firstName;
-      // if (nameParts.length >= 2) {
-      //   firstName = nameParts[0] + " " + nameParts[1]; // "Van Joshua"
-      // } else {
-      //   firstName = nameParts[0]; // fallback for single-word name
-      // }
-
-      // console.log(firstName);
+      let firstName;
+      if (nameParts.length >= 2) {
+        firstName = nameParts[0] + " " + nameParts[1]; // "Van Joshua"
+      } else {
+        firstName = nameParts[0]; // fallback for single-word name
+      }
+      sessionStorage.setItem("fname", firstName)
 
       if (!response.ok) {
         setError(true);
@@ -74,7 +73,7 @@ function Login() {
         <div className="px-5 py-3 flex flex-col gap-2">
           <p
             className={clx(
-              "text-red-500 text-center text-sm",
+              "text-red-500 text-center text-sm bg-red-200 py-2 rounded-sm outline-1",
               myerror ? "" : "hidden"
             )}
           >

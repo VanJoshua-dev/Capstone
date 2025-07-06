@@ -56,7 +56,7 @@ function LoginVerificaton() {
         <div className="px-5 py-3 flex flex-col gap-2">
           <p
             className={clx(
-              'text-red-500 text-center text-sm',
+              'text-red-500 text-center text-sm bg-red-200 py-2 rounded-sm outline-1',
               error ? "" : "hidden"
             )}
           >

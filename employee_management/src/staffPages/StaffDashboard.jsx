@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import { useNavigate } from "react-router-dom";
+
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  return null;
+};
 const StaffDashboard = () => {
   const [showScanner, setShowScanner] = useState(false);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [leaveForm, setLeaveForm] = useState({ date: "", reason: "" });
-  const navigate = useNavigate()
+
+  //Set first name
+  const [firstName, setFirstName] = useState("");
+  useEffect(() => {
+    const storedName = sessionStorage.getItem("fname");
+    if (storedName) {
+      setFirstName(storedName);
+    }
+  }, []);
+  const navigate = useNavigate();
   const assignedEvents = [
     {
       id: 1,
@@ -43,7 +59,6 @@ const StaffDashboard = () => {
       date: "2025-06-08 10:12 AM",
     },
   ];
-  const name = localStorage.getItem("cb_username");
   // Start QR scanner ;>
   useEffect(() => {
     let html5QrCode;
@@ -87,8 +102,8 @@ const StaffDashboard = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   const handleLeaveSubmit = (e) => {
     e.preventDefault();
@@ -101,8 +116,9 @@ const StaffDashboard = () => {
     <div className="bg-[#E9EDF8] w-full h-auto p-4 space-y-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-[#0A1727] px-4 py-3 rounded-md">
         <div className="flex items-center gap-2">
-           
-            <span className="text-xl font-semibold text-gray-200">Logged in as {name}</span>
+          <span className="text-xl font-semibold text-gray-200">
+            {firstName ? <p>Logged in as {firstName}</p> : <p>Not logged in</p>}
+          </span>
         </div>
         <div className="flex gap-2 justify-center sm:justify-end">
           <button
@@ -123,7 +139,6 @@ const StaffDashboard = () => {
           >
             Logout
           </button>
-          
         </div>
       </div>
 
